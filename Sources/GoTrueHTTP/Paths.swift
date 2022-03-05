@@ -30,7 +30,7 @@ extension Paths {
     /// Path: `/verify`
     public let path: String
 
-    public func post(_ body: GoTrueHTTP.VerificationRequest? = nil) -> Request<
+    public func post(_ body: GoTrueHTTP.VerificationRequest) -> Request<
       GoTrueHTTP.VerificationResponse
     > {
       .post(path, body: body)
