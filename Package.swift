@@ -10,13 +10,15 @@ let package = Package(
     .library(name: "GoTrueHTTP", targets: ["GoTrueHTTP"])
   ],
   dependencies: [
-    .package(url: "https://github.com/kean/Get", branch: "main")
+    .package(url: "https://github.com/kean/Get", branch: "main"),
+    .package(url: "https://github.com/kean/URLQueryEncoder", branch: "main"),
   ],
   targets: [
     .target(
       name: "GoTrueHTTP",
       dependencies: [
-        .product(name: "Get", package: "Get")
+        .product(name: "Get", package: "Get"),
+        .product(name: "URLQueryEncoder", package: "URLQueryEncoder"),
       ]
     )
   ]

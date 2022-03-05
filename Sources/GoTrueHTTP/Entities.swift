@@ -121,6 +121,50 @@ public struct VerificationResponse: Codable {
   }
 }
 
+public struct TokenRequest: Codable {
+  public var email: String?
+  public var password: String?
+  public var phone: String?
+  public var refreshToken: String?
+
+  public init(
+    email: String? = nil, password: String? = nil, phone: String? = nil, refreshToken: String? = nil
+  ) {
+    self.email = email
+    self.password = password
+    self.phone = phone
+    self.refreshToken = refreshToken
+  }
+
+  private enum CodingKeys: String, CodingKey {
+    case email
+    case password
+    case phone
+    case refreshToken = "refresh_token"
+  }
+}
+
+public struct TokenResponse: Codable {
+  public var accessToken: String
+  public var tokenType: String
+  public var expiresIn: Double
+  public var refreshToken: String
+
+  public init(accessToken: String, tokenType: String, expiresIn: Double, refreshToken: String) {
+    self.accessToken = accessToken
+    self.tokenType = tokenType
+    self.expiresIn = expiresIn
+    self.refreshToken = refreshToken
+  }
+
+  private enum CodingKeys: String, CodingKey {
+    case accessToken = "access_token"
+    case tokenType = "token_type"
+    case expiresIn = "expires_in"
+    case refreshToken = "refresh_token"
+  }
+}
+
 struct StringCodingKey: CodingKey, ExpressibleByStringLiteral {
   private let string: String
   private var int: Int?

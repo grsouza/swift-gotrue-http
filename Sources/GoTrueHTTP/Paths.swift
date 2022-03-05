@@ -5,6 +5,7 @@
 
 import Foundation
 import Get
+import URLQueryEncoder
 
 extension Paths {
   public static var settings: Settings {
@@ -34,6 +35,34 @@ extension Paths {
       GoTrueHTTP.VerificationResponse
     > {
       .post(path, body: body)
+    }
+  }
+}
+
+extension Paths {
+  public static var token: Token {
+    Token(path: "/token")
+  }
+
+  public struct Token {
+    /// Path: `/token`
+    public let path: String
+
+    public func post(grantType: GrantType, _ body: GoTrueHTTP.TokenRequest) -> Request<
+      GoTrueHTTP.TokenResponse
+    > {
+      .post(path, query: makePostQuery(grantType), body: body)
+    }
+
+    private func makePostQuery(_ grantType: GrantType) -> [(String, String?)] {
+      let encoder = URLQueryEncoder()
+      encoder.encode(grantType, forKey: "grant_type")
+      return encoder.items
+    }
+
+    public enum GrantType: String, Codable, CaseIterable {
+      case password
+      case refreshToken = "refresh_token"
     }
   }
 }

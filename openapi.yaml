@@ -14,7 +14,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SettingsResponse'
-    
+
   /verify:
     summary: Verify a registration or a password recovery.
     post:
@@ -32,6 +32,32 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/VerificationResponse'
+  /token:
+    summary: This is an OAuth2 endpoint that currently implements the password and refresh_token grant types
+    post:
+      parameters:
+        - name: grant_type
+          in: query
+          required: true
+          schema:
+            type: string
+            enum:
+              - password
+              - refresh_token
+      requestBody:
+        description: ''
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRequest'
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
 components:
   schemas:
     VerificationType:
@@ -50,33 +76,33 @@ components:
         external:
           type: object
           properties:
-            apple: 
+            apple:
               type: boolean
-            azure: 
+            azure:
               type: boolean
-            bitbucket: 
+            bitbucket:
               type: boolean
-            discord: 
+            discord:
               type: boolean
-            facebook: 
+            facebook:
               type: boolean
-            github: 
+            github:
               type: boolean
-            gitlab: 
+            gitlab:
               type: boolean
-            google: 
+            google:
               type: boolean
-            linkedin: 
+            linkedin:
               type: boolean
-            notion: 
+            notion:
               type: boolean
-            slack: 
+            slack:
               type: boolean
-            spotify: 
+            spotify:
               type: boolean
-            twitch: 
+            twitch:
               type: boolean
-            twitter: 
+            twitter:
               type: boolean
           required:
             - apple
@@ -127,3 +153,31 @@ components:
         - expires_in
         - refresh_token
         - type
+    TokenRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+        phone:
+          type: string
+        refresh_token:
+          type: string
+    TokenResponse:
+      properties:
+        access_token:
+          type: string
+        token_type:
+          type: string
+        expires_in:
+          type: number
+        refresh_token:
+          type: string
+      required:
+        - access_token
+        - token_type
+        - expires_in
+        - refresh_token
