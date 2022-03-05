@@ -1,0 +1,128 @@
+openapi: 3.0.0
+info:
+  title: Supabase GoTrue
+  description: 'A JWT based API for managing users and issuing JWT tokens '
+  version: 0.0.1
+paths:
+  /settings:
+    summary: Returns the publicly available settings for this gotrue instance.
+    get:
+      responses:
+        '200':
+          description: 'Returns the settings response'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SettingsResponse'
+    
+  /verify:
+    summary: Verify a registration or a password recovery.
+    post:
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerificationRequest'
+      responses:
+        default:
+          description: Verification response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerificationResponse'
+components:
+  schemas:
+    VerificationType:
+      type: string
+      enum:
+        - signup
+        - recovery
+        - invite
+    SettingsResponse:
+      type: object
+      properties:
+        autoconfirm:
+          type: boolean
+        disable_signup:
+          type: boolean
+        external:
+          type: object
+          properties:
+            apple: 
+              type: boolean
+            azure: 
+              type: boolean
+            bitbucket: 
+              type: boolean
+            discord: 
+              type: boolean
+            facebook: 
+              type: boolean
+            github: 
+              type: boolean
+            gitlab: 
+              type: boolean
+            google: 
+              type: boolean
+            linkedin: 
+              type: boolean
+            notion: 
+              type: boolean
+            slack: 
+              type: boolean
+            spotify: 
+              type: boolean
+            twitch: 
+              type: boolean
+            twitter: 
+              type: boolean
+          required:
+            - apple
+            - azure
+            - bitbucket
+            - discord
+            - facebook
+            - github
+            - gitlab
+            - google
+            - linkedin
+            - notion
+            - slack
+            - spotify
+            - twitch
+            - twitter
+      required:
+        - autoconfirm
+        - disable_signup
+        - external
+    VerificationRequest:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/VerificationType'
+        token:
+          type: string
+      required:
+        - type
+        - token
+
+    VerificationResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+        token_type:
+          type: string
+        expires_in:
+          type: number
+        refresh_token:
+          type: string
+        type:
+          $ref: '#/components/schemas/VerificationType'
+      required:
+        - access_token
+        - token_type
+        - expires_in
+        - refresh_token
+        - type
