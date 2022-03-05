@@ -10,3 +10,5 @@ create-api:
 		--output Sources/GoTrueHTTP \
 		--module GoTrueHTTP
 	$(MAKE) format
+
+.PHONY: format create-api
