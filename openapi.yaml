@@ -1,37 +1,37 @@
 openapi: 3.0.0
 info:
   title: Supabase GoTrue
-  description: 'A JWT based API for managing users and issuing JWT tokens '
+  description: "A JWT based API for managing users and issuing JWT tokens "
   version: 0.0.1
 paths:
   /settings:
     summary: Returns the publicly available settings for this gotrue instance.
     get:
       responses:
-        '200':
-          description: 'Returns the settings response'
+        "200":
+          description: "Returns the settings response"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SettingsResponse'
+                $ref: "#/components/schemas/SettingsResponse"
 
   /verify:
     summary: Verify a registration or a password recovery.
     post:
       requestBody:
-        description: ''
+        description: ""
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/VerificationRequest'
+              $ref: "#/components/schemas/VerificationRequest"
       responses:
         default:
           description: Verification response.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/VerificationResponse'
+                $ref: "#/components/schemas/VerificationResponse"
   /token:
     summary: This is an OAuth2 endpoint that currently implements the password and refresh_token grant types
     post:
@@ -44,21 +44,66 @@ paths:
             enum:
               - password
               - refresh_token
+        - $ref: "#/components/parameters/redirect_url"
       requestBody:
-        description: ''
+        description: ""
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TokenRequest'
+              $ref: "#/components/schemas/TokenRequest"
       responses:
         default:
-          description: ''
+          description: ""
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TokenResponse'
+                $ref: "#/components/schemas/Session"
+  /signup:
+    summary: ""
+    post:
+      parameters:
+        - $ref: "#/components/parameters/redirect_url"
+      requestBody:
+        description: ""
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+                data:
+                  type: object
+                gotrue_meta_security:
+                  format: object
+                  properties:
+                    hcaptcha_token:
+                      type: string
+              required:
+                - email
+                - password
+      responses:
+        default:
+          description: ""
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/Session"
+                  - $ref: "#/components/schemas/User"
 components:
+  parameters:
+    redirect_url:
+      name: redirect_url
+      in: query
+      schema:
+        type: string
+        format: url
   schemas:
     VerificationType:
       type: string
@@ -127,7 +172,7 @@ components:
       type: object
       properties:
         type:
-          $ref: '#/components/schemas/VerificationType'
+          $ref: "#/components/schemas/VerificationType"
         token:
           type: string
       required:
@@ -146,7 +191,7 @@ components:
         refresh_token:
           type: string
         type:
-          $ref: '#/components/schemas/VerificationType'
+          $ref: "#/components/schemas/VerificationType"
       required:
         - access_token
         - token_type
@@ -166,7 +211,8 @@ components:
           type: string
         refresh_token:
           type: string
-    TokenResponse:
+    Session:
+      type: object
       properties:
         access_token:
           type: string
@@ -176,8 +222,19 @@ components:
           type: number
         refresh_token:
           type: string
+        user:
+          $ref: "#/components/schemas/User"
       required:
         - access_token
         - token_type
         - expires_in
         - refresh_token
+        - user
+    User:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+      required:
+        - email

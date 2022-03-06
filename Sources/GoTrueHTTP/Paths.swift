@@ -48,21 +48,100 @@ extension Paths {
     /// Path: `/token`
     public let path: String
 
-    public func post(grantType: GrantType, _ body: GoTrueHTTP.TokenRequest) -> Request<
-      GoTrueHTTP.TokenResponse
-    > {
-      .post(path, query: makePostQuery(grantType), body: body)
+    public func post(
+      grantType: GrantType, redirectURL: String? = nil, _ body: GoTrueHTTP.TokenRequest
+    ) -> Request<GoTrueHTTP.Session> {
+      .post(path, query: makePostQuery(grantType, redirectURL), body: body)
     }
 
-    private func makePostQuery(_ grantType: GrantType) -> [(String, String?)] {
+    private func makePostQuery(_ grantType: GrantType, _ redirectURL: String?) -> [(
+      String, String?
+    )] {
       let encoder = URLQueryEncoder()
       encoder.encode(grantType, forKey: "grant_type")
+      encoder.encode(redirectURL, forKey: "redirect_url")
       return encoder.items
     }
 
     public enum GrantType: String, Codable, CaseIterable {
       case password
       case refreshToken = "refresh_token"
+    }
+  }
+}
+
+extension Paths {
+  public static var signup: Signup {
+    Signup(path: "/signup")
+  }
+
+  public struct Signup {
+    /// Path: `/signup`
+    public let path: String
+
+    public func post(redirectURL: String? = nil, _ body: PostRequest? = nil) -> Request<
+      PostResponse
+    > {
+      .post(path, query: makePostQuery(redirectURL), body: body)
+    }
+
+    public enum PostResponse: Decodable {
+      case session(GoTrueHTTP.Session)
+      case user(GoTrueHTTP.User)
+
+      public init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        if let value = try? container.decode(GoTrueHTTP.Session.self) {
+          self = .session(value)
+        } else if let value = try? container.decode(GoTrueHTTP.User.self) {
+          self = .user(value)
+        } else {
+          throw DecodingError.dataCorruptedError(
+            in: container, debugDescription: "Failed to intialize `oneOf`")
+        }
+      }
+    }
+
+    private func makePostQuery(_ redirectURL: String?) -> [(String, String?)] {
+      let encoder = URLQueryEncoder()
+      encoder.encode(redirectURL, forKey: "redirect_url")
+      return encoder.items
+    }
+
+    public struct PostRequest: Encodable {
+      public var email: String
+      public var password: String
+      public var data: [String: AnyJSON]?
+      public var gotrueMetaSecurity: GotrueMetaSecurity?
+
+      public struct GotrueMetaSecurity: Encodable {
+        public var hcaptchaToken: String?
+
+        public init(hcaptchaToken: String? = nil) {
+          self.hcaptchaToken = hcaptchaToken
+        }
+
+        private enum CodingKeys: String, CodingKey {
+          case hcaptchaToken = "hcaptcha_token"
+        }
+      }
+
+      public init(
+        email: String, password: String, data: [String: AnyJSON]? = nil,
+        gotrueMetaSecurity: GotrueMetaSecurity? = nil
+      ) {
+        self.email = email
+        self.password = password
+        self.data = data
+        self.gotrueMetaSecurity = gotrueMetaSecurity
+      }
+
+      private enum CodingKeys: String, CodingKey {
+        case email
+        case password
+        case data
+        case gotrueMetaSecurity = "gotrue_meta_security"
+      }
     }
   }
 }

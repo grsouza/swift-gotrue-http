@@ -144,17 +144,21 @@ public struct TokenRequest: Codable {
   }
 }
 
-public struct TokenResponse: Codable {
+public struct Session: Codable {
   public var accessToken: String
   public var tokenType: String
   public var expiresIn: Double
   public var refreshToken: String
+  public var user: User
 
-  public init(accessToken: String, tokenType: String, expiresIn: Double, refreshToken: String) {
+  public init(
+    accessToken: String, tokenType: String, expiresIn: Double, refreshToken: String, user: User
+  ) {
     self.accessToken = accessToken
     self.tokenType = tokenType
     self.expiresIn = expiresIn
     self.refreshToken = refreshToken
+    self.user = user
   }
 
   private enum CodingKeys: String, CodingKey {
@@ -162,6 +166,63 @@ public struct TokenResponse: Codable {
     case tokenType = "token_type"
     case expiresIn = "expires_in"
     case refreshToken = "refresh_token"
+    case user
+  }
+}
+
+public struct User: Codable {
+  public var email: String
+
+  public init(email: String) {
+    self.email = email
+  }
+}
+
+public enum AnyJSON: Equatable, Codable {
+  case string(String)
+  case number(Double)
+  case object([String: AnyJSON])
+  case array([AnyJSON])
+  case bool(Bool)
+
+  var value: Any {
+    switch self {
+    case .string(let string): return string
+    case .number(let double): return double
+    case .object(let dictionary): return dictionary
+    case .array(let array): return array
+    case .bool(let bool): return bool
+    }
+  }
+
+  public func encode(to encoder: Encoder) throws {
+    var container = encoder.singleValueContainer()
+    switch self {
+    case let .array(array): try container.encode(array)
+    case let .object(object): try container.encode(object)
+    case let .string(string): try container.encode(string)
+    case let .number(number): try container.encode(number)
+    case let .bool(bool): try container.encode(bool)
+    }
+  }
+
+  public init(from decoder: Decoder) throws {
+    let container = try decoder.singleValueContainer()
+    if let object = try? container.decode([String: AnyJSON].self) {
+      self = .object(object)
+    } else if let array = try? container.decode([AnyJSON].self) {
+      self = .array(array)
+    } else if let string = try? container.decode(String.self) {
+      self = .string(string)
+    } else if let bool = try? container.decode(Bool.self) {
+      self = .bool(bool)
+    } else if let number = try? container.decode(Double.self) {
+      self = .number(number)
+    } else {
+      throw DecodingError.dataCorrupted(
+        .init(codingPath: decoder.codingPath, debugDescription: "Invalid JSON value.")
+      )
+    }
   }
 }
 
