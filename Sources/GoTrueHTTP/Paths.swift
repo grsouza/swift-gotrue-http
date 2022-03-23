@@ -8,36 +8,6 @@ import Get
 import URLQueryEncoder
 
 extension Paths {
-    public static var settings: Settings {
-        Settings(path: "/settings")
-    }
-
-    public struct Settings {
-        /// Path: `/settings`
-        public let path: String
-
-        public var get: Request<GoTrueHTTP.SettingsResponse> {
-            .get(path)
-        }
-    }
-}
-
-extension Paths {
-    public static var verify: Verify {
-        Verify(path: "/verify")
-    }
-
-    public struct Verify {
-        /// Path: `/verify`
-        public let path: String
-
-        public func post(_ body: GoTrueHTTP.VerificationRequest) -> Request<GoTrueHTTP.VerificationResponse> {
-            .post(path, body: body)
-        }
-    }
-}
-
-extension Paths {
     public static var token: Token {
         Token(path: "/token")
     }
@@ -73,7 +43,7 @@ extension Paths {
         /// Path: `/signup`
         public let path: String
 
-        public func post(redirectURL: URL? = nil, _ body: PostRequest? = nil) -> Request<PostResponse> {
+        public func post(redirectURL: URL? = nil, _ body: GoTrueHTTP.SignUpRequest? = nil) -> Request<PostResponse> {
             .post(path, query: makePostQuery(redirectURL), body: body)
         }
 
@@ -97,42 +67,6 @@ extension Paths {
             let encoder = URLQueryEncoder()
             encoder.encode(redirectURL, forKey: "redirect_url")
             return encoder.items
-        }
-
-        public struct PostRequest: Encodable {
-            public var email: String?
-            public var password: String?
-            public var phone: String?
-            public var data: [String: AnyJSON]?
-            public var gotrueMetaSecurity: GotrueMetaSecurity?
-
-            public struct GotrueMetaSecurity: Encodable {
-                public var hcaptchaToken: String?
-
-                public init(hcaptchaToken: String? = nil) {
-                    self.hcaptchaToken = hcaptchaToken
-                }
-
-                private enum CodingKeys: String, CodingKey {
-                    case hcaptchaToken = "hcaptcha_token"
-                }
-            }
-
-            public init(email: String? = nil, password: String? = nil, phone: String? = nil, data: [String: AnyJSON]? = nil, gotrueMetaSecurity: GotrueMetaSecurity? = nil) {
-                self.email = email
-                self.password = password
-                self.phone = phone
-                self.data = data
-                self.gotrueMetaSecurity = gotrueMetaSecurity
-            }
-
-            private enum CodingKeys: String, CodingKey {
-                case email
-                case password
-                case phone
-                case data
-                case gotrueMetaSecurity = "gotrue_meta_security"
-            }
         }
     }
 }

@@ -5,115 +5,6 @@
 
 import Foundation
 
-public enum VerificationType: String, Codable, CaseIterable {
-    case signup
-    case recovery
-    case invite
-}
-
-public struct SettingsResponse: Codable {
-    public var isAutoconfirm: Bool
-    public var isDisableSignup: Bool
-    public var external: External
-
-    public struct External: Codable {
-        public var isApple: Bool
-        public var isAzure: Bool
-        public var isBitbucket: Bool
-        public var isDiscord: Bool
-        public var isFacebook: Bool
-        public var isGithub: Bool
-        public var isGitlab: Bool
-        public var isGoogle: Bool
-        public var isLinkedin: Bool
-        public var isNotion: Bool
-        public var isSlack: Bool
-        public var isSpotify: Bool
-        public var isTwitch: Bool
-        public var isTwitter: Bool
-
-        public init(isApple: Bool, isAzure: Bool, isBitbucket: Bool, isDiscord: Bool, isFacebook: Bool, isGithub: Bool, isGitlab: Bool, isGoogle: Bool, isLinkedin: Bool, isNotion: Bool, isSlack: Bool, isSpotify: Bool, isTwitch: Bool, isTwitter: Bool) {
-            self.isApple = isApple
-            self.isAzure = isAzure
-            self.isBitbucket = isBitbucket
-            self.isDiscord = isDiscord
-            self.isFacebook = isFacebook
-            self.isGithub = isGithub
-            self.isGitlab = isGitlab
-            self.isGoogle = isGoogle
-            self.isLinkedin = isLinkedin
-            self.isNotion = isNotion
-            self.isSlack = isSlack
-            self.isSpotify = isSpotify
-            self.isTwitch = isTwitch
-            self.isTwitter = isTwitter
-        }
-
-        private enum CodingKeys: String, CodingKey {
-            case isApple = "apple"
-            case isAzure = "azure"
-            case isBitbucket = "bitbucket"
-            case isDiscord = "discord"
-            case isFacebook = "facebook"
-            case isGithub = "github"
-            case isGitlab = "gitlab"
-            case isGoogle = "google"
-            case isLinkedin = "linkedin"
-            case isNotion = "notion"
-            case isSlack = "slack"
-            case isSpotify = "spotify"
-            case isTwitch = "twitch"
-            case isTwitter = "twitter"
-        }
-    }
-
-    public init(isAutoconfirm: Bool, isDisableSignup: Bool, external: External) {
-        self.isAutoconfirm = isAutoconfirm
-        self.isDisableSignup = isDisableSignup
-        self.external = external
-    }
-
-    private enum CodingKeys: String, CodingKey {
-        case isAutoconfirm = "autoconfirm"
-        case isDisableSignup = "disable_signup"
-        case external
-    }
-}
-
-public struct VerificationRequest: Codable {
-    public var type: VerificationType
-    public var token: String
-
-    public init(type: VerificationType, token: String) {
-        self.type = type
-        self.token = token
-    }
-}
-
-public struct VerificationResponse: Codable {
-    public var accessToken: String
-    public var tokenType: String
-    public var expiresIn: Double
-    public var refreshToken: String
-    public var type: VerificationType
-
-    public init(accessToken: String, tokenType: String, expiresIn: Double, refreshToken: String, type: VerificationType) {
-        self.accessToken = accessToken
-        self.tokenType = tokenType
-        self.expiresIn = expiresIn
-        self.refreshToken = refreshToken
-        self.type = type
-    }
-
-    private enum CodingKeys: String, CodingKey {
-        case accessToken = "access_token"
-        case tokenType = "token_type"
-        case expiresIn = "expires_in"
-        case refreshToken = "refresh_token"
-        case type
-    }
-}
-
 public struct TokenRequest: Codable {
     public var email: String?
     public var password: String?
@@ -132,6 +23,42 @@ public struct TokenRequest: Codable {
         case password
         case phone
         case refreshToken = "refresh_token"
+    }
+}
+
+public struct SignUpRequest: Codable {
+    public var email: String?
+    public var password: String?
+    public var phone: String?
+    public var data: [String: AnyJSON]?
+    public var gotrueMetaSecurity: GotrueMetaSecurity?
+
+    public struct GotrueMetaSecurity: Codable {
+        public var hcaptchaToken: String?
+
+        public init(hcaptchaToken: String? = nil) {
+            self.hcaptchaToken = hcaptchaToken
+        }
+
+        private enum CodingKeys: String, CodingKey {
+            case hcaptchaToken = "hcaptcha_token"
+        }
+    }
+
+    public init(email: String? = nil, password: String? = nil, phone: String? = nil, data: [String: AnyJSON]? = nil, gotrueMetaSecurity: GotrueMetaSecurity? = nil) {
+        self.email = email
+        self.password = password
+        self.phone = phone
+        self.data = data
+        self.gotrueMetaSecurity = gotrueMetaSecurity
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case email
+        case password
+        case phone
+        case data
+        case gotrueMetaSecurity = "gotrue_meta_security"
     }
 }
 

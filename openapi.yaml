@@ -4,34 +4,6 @@ info:
   description: "A JWT based API for managing users and issuing JWT tokens "
   version: 0.0.1
 paths:
-  /settings:
-    summary: Returns the publicly available settings for this gotrue instance.
-    get:
-      responses:
-        "200":
-          description: "Returns the settings response"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/SettingsResponse"
-
-  /verify:
-    summary: Verify a registration or a password recovery.
-    post:
-      requestBody:
-        description: ""
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/VerificationRequest"
-      responses:
-        default:
-          description: Verification response.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/VerificationResponse"
   /token:
     summary: This is an OAuth2 endpoint that currently implements the password and refresh_token grant types
     post:
@@ -69,23 +41,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                email:
-                  type: string
-                  format: email
-                password:
-                  type: string
-                  format: password
-                phone:
-                  type: string
-                data:
-                  type: object
-                gotrue_meta_security:
-                  format: object
-                  properties:
-                    hcaptcha_token:
-                      type: string
+              $ref: "#/components/schemas/SignUpRequest"
       responses:
         default:
           description: ""
@@ -104,99 +60,6 @@ components:
         type: string
         format: uri
   schemas:
-    VerificationType:
-      type: string
-      enum:
-        - signup
-        - recovery
-        - invite
-    SettingsResponse:
-      type: object
-      properties:
-        autoconfirm:
-          type: boolean
-        disable_signup:
-          type: boolean
-        external:
-          type: object
-          properties:
-            apple:
-              type: boolean
-            azure:
-              type: boolean
-            bitbucket:
-              type: boolean
-            discord:
-              type: boolean
-            facebook:
-              type: boolean
-            github:
-              type: boolean
-            gitlab:
-              type: boolean
-            google:
-              type: boolean
-            linkedin:
-              type: boolean
-            notion:
-              type: boolean
-            slack:
-              type: boolean
-            spotify:
-              type: boolean
-            twitch:
-              type: boolean
-            twitter:
-              type: boolean
-          required:
-            - apple
-            - azure
-            - bitbucket
-            - discord
-            - facebook
-            - github
-            - gitlab
-            - google
-            - linkedin
-            - notion
-            - slack
-            - spotify
-            - twitch
-            - twitter
-      required:
-        - autoconfirm
-        - disable_signup
-        - external
-    VerificationRequest:
-      type: object
-      properties:
-        type:
-          $ref: "#/components/schemas/VerificationType"
-        token:
-          type: string
-      required:
-        - type
-        - token
-
-    VerificationResponse:
-      type: object
-      properties:
-        access_token:
-          type: string
-        token_type:
-          type: string
-        expires_in:
-          type: number
-        refresh_token:
-          type: string
-        type:
-          $ref: "#/components/schemas/VerificationType"
-      required:
-        - access_token
-        - token_type
-        - expires_in
-        - refresh_token
-        - type
     TokenRequest:
       type: object
       properties:
@@ -210,6 +73,24 @@ components:
           type: string
         refresh_token:
           type: string
+    SignUpRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+        phone:
+          type: string
+        data:
+          type: object
+        gotrue_meta_security:
+          format: object
+          properties:
+            hcaptcha_token:
+              type: string
     Session:
       type: object
       properties:
@@ -239,7 +120,7 @@ components:
           type: object
         user_metadata:
           type: object
-        aud: 
+        aud:
           type: string
         confirmation_sent_at:
           type: string
@@ -274,13 +155,13 @@ components:
           format: date-time
         role:
           type: string
-        updated_at: 
+        updated_at:
           type: string
           format: date-time
         identities:
           type: array
           items:
-            $ref: '#/components/schemas/UserIdentity'
+            $ref: "#/components/schemas/UserIdentity"
       required:
         - id
         - app_metadata
@@ -299,7 +180,7 @@ components:
           format: uuid
         identity_data:
           type: object
-        provider: 
+        provider:
           type: string
         created_at:
           type: string
