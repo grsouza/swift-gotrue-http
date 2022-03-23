@@ -160,10 +160,95 @@ public struct Session: Codable {
 }
 
 public struct User: Codable {
-    public var email: String
+    public var id: String
+    public var appMetadata: [String: AnyJSON]
+    public var userMetadata: [String: AnyJSON]
+    public var aud: String
+    public var confirmationSentAt: Date?
+    public var recoverySentAt: Date?
+    public var invitedAt: Date?
+    public var actionLink: String?
+    public var email: String?
+    public var phone: String?
+    public var createdAt: Date
+    public var confirmedAt: Date?
+    public var emailConfirmedAt: Date?
+    public var phoneConfirmedAt: Date?
+    public var lastSignInAt: Date?
+    public var role: String?
+    public var updatedAt: Date
+    public var identities: [UserIdentity]?
 
-    public init(email: String) {
+    public init(id: String, appMetadata: [String: AnyJSON], userMetadata: [String: AnyJSON], aud: String, confirmationSentAt: Date? = nil, recoverySentAt: Date? = nil, invitedAt: Date? = nil, actionLink: String? = nil, email: String? = nil, phone: String? = nil, createdAt: Date, confirmedAt: Date? = nil, emailConfirmedAt: Date? = nil, phoneConfirmedAt: Date? = nil, lastSignInAt: Date? = nil, role: String? = nil, updatedAt: Date, identities: [UserIdentity]? = nil) {
+        self.id = id
+        self.appMetadata = appMetadata
+        self.userMetadata = userMetadata
+        self.aud = aud
+        self.confirmationSentAt = confirmationSentAt
+        self.recoverySentAt = recoverySentAt
+        self.invitedAt = invitedAt
+        self.actionLink = actionLink
         self.email = email
+        self.phone = phone
+        self.createdAt = createdAt
+        self.confirmedAt = confirmedAt
+        self.emailConfirmedAt = emailConfirmedAt
+        self.phoneConfirmedAt = phoneConfirmedAt
+        self.lastSignInAt = lastSignInAt
+        self.role = role
+        self.updatedAt = updatedAt
+        self.identities = identities
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case appMetadata = "app_metadata"
+        case userMetadata = "user_metadata"
+        case aud
+        case confirmationSentAt = "confirmation_sent_at"
+        case recoverySentAt = "recovery_sent_at"
+        case invitedAt = "invited_at"
+        case actionLink = "action_link"
+        case email
+        case phone
+        case createdAt = "created_at"
+        case confirmedAt = "confirmed_at"
+        case emailConfirmedAt = "email_confirmed_at"
+        case phoneConfirmedAt = "phone_confirmed_at"
+        case lastSignInAt = "last_sign_in_at"
+        case role
+        case updatedAt = "updated_at"
+        case identities
+    }
+}
+
+public struct UserIdentity: Codable {
+    public var id: String
+    public var userID: String
+    public var identityData: [String: AnyJSON]
+    public var provider: String
+    public var createdAt: Date
+    public var lastSignInAt: Date
+    public var updatedAt: Date
+
+    public init(id: String, userID: String, identityData: [String: AnyJSON], provider: String, createdAt: Date, lastSignInAt: Date, updatedAt: Date) {
+        self.id = id
+        self.userID = userID
+        self.identityData = identityData
+        self.provider = provider
+        self.createdAt = createdAt
+        self.lastSignInAt = lastSignInAt
+        self.updatedAt = updatedAt
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case userID = "user_id"
+        case identityData = "identity_data"
+        case provider
+        case createdAt = "created_at"
+        case lastSignInAt = "last_sign_in_at"
+        case updatedAt = "updated_at"
     }
 }
 

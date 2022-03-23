@@ -232,8 +232,89 @@ components:
     User:
       type: object
       properties:
+        id:
+          type: string
+          format: uuid
+        app_metadata:
+          type: object
+        user_metadata:
+          type: object
+        aud: 
+          type: string
+        confirmation_sent_at:
+          type: string
+          format: date-time
+        recovery_sent_at:
+          type: string
+          format: date-time
+        invited_at:
+          type: string
+          format: date-time
+        action_link:
+          type: string
         email:
           type: string
           format: email
+        phone:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        confirmed_at:
+          type: string
+          format: date-time
+        email_confirmed_at:
+          type: string
+          format: date-time
+        phone_confirmed_at:
+          type: string
+          format: date-time
+        last_sign_in_at:
+          type: string
+          format: date-time
+        role:
+          type: string
+        updated_at: 
+          type: string
+          format: date-time
+        identities:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserIdentity'
       required:
-        - email
+        - id
+        - app_metadata
+        - user_metadata
+        - aud
+        - created_at
+        - updated_at
+    UserIdentity:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        identity_data:
+          type: object
+        provider: 
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        last_sign_in_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+        - id
+        - user_id
+        - identity_data
+        - provider
+        - created_at
+        - last_sign_in_at
+        - updated_at
