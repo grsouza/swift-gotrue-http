@@ -77,6 +77,8 @@ paths:
                 password:
                   type: string
                   format: password
+                phone:
+                  type: string
                 data:
                   type: object
                 gotrue_meta_security:
@@ -84,9 +86,6 @@ paths:
                   properties:
                     hcaptcha_token:
                       type: string
-              required:
-                - email
-                - password
       responses:
         default:
           description: ""

@@ -6,248 +6,237 @@
 import Foundation
 
 public enum VerificationType: String, Codable, CaseIterable {
-  case signup
-  case recovery
-  case invite
+    case signup
+    case recovery
+    case invite
 }
 
 public struct SettingsResponse: Codable {
-  public var isAutoconfirm: Bool
-  public var isDisableSignup: Bool
-  public var external: External
+    public var isAutoconfirm: Bool
+    public var isDisableSignup: Bool
+    public var external: External
 
-  public struct External: Codable {
-    public var isApple: Bool
-    public var isAzure: Bool
-    public var isBitbucket: Bool
-    public var isDiscord: Bool
-    public var isFacebook: Bool
-    public var isGithub: Bool
-    public var isGitlab: Bool
-    public var isGoogle: Bool
-    public var isLinkedin: Bool
-    public var isNotion: Bool
-    public var isSlack: Bool
-    public var isSpotify: Bool
-    public var isTwitch: Bool
-    public var isTwitter: Bool
+    public struct External: Codable {
+        public var isApple: Bool
+        public var isAzure: Bool
+        public var isBitbucket: Bool
+        public var isDiscord: Bool
+        public var isFacebook: Bool
+        public var isGithub: Bool
+        public var isGitlab: Bool
+        public var isGoogle: Bool
+        public var isLinkedin: Bool
+        public var isNotion: Bool
+        public var isSlack: Bool
+        public var isSpotify: Bool
+        public var isTwitch: Bool
+        public var isTwitter: Bool
 
-    public init(
-      isApple: Bool, isAzure: Bool, isBitbucket: Bool, isDiscord: Bool, isFacebook: Bool,
-      isGithub: Bool, isGitlab: Bool, isGoogle: Bool, isLinkedin: Bool, isNotion: Bool,
-      isSlack: Bool, isSpotify: Bool, isTwitch: Bool, isTwitter: Bool
-    ) {
-      self.isApple = isApple
-      self.isAzure = isAzure
-      self.isBitbucket = isBitbucket
-      self.isDiscord = isDiscord
-      self.isFacebook = isFacebook
-      self.isGithub = isGithub
-      self.isGitlab = isGitlab
-      self.isGoogle = isGoogle
-      self.isLinkedin = isLinkedin
-      self.isNotion = isNotion
-      self.isSlack = isSlack
-      self.isSpotify = isSpotify
-      self.isTwitch = isTwitch
-      self.isTwitter = isTwitter
+        public init(isApple: Bool, isAzure: Bool, isBitbucket: Bool, isDiscord: Bool, isFacebook: Bool, isGithub: Bool, isGitlab: Bool, isGoogle: Bool, isLinkedin: Bool, isNotion: Bool, isSlack: Bool, isSpotify: Bool, isTwitch: Bool, isTwitter: Bool) {
+            self.isApple = isApple
+            self.isAzure = isAzure
+            self.isBitbucket = isBitbucket
+            self.isDiscord = isDiscord
+            self.isFacebook = isFacebook
+            self.isGithub = isGithub
+            self.isGitlab = isGitlab
+            self.isGoogle = isGoogle
+            self.isLinkedin = isLinkedin
+            self.isNotion = isNotion
+            self.isSlack = isSlack
+            self.isSpotify = isSpotify
+            self.isTwitch = isTwitch
+            self.isTwitter = isTwitter
+        }
+
+        private enum CodingKeys: String, CodingKey {
+            case isApple = "apple"
+            case isAzure = "azure"
+            case isBitbucket = "bitbucket"
+            case isDiscord = "discord"
+            case isFacebook = "facebook"
+            case isGithub = "github"
+            case isGitlab = "gitlab"
+            case isGoogle = "google"
+            case isLinkedin = "linkedin"
+            case isNotion = "notion"
+            case isSlack = "slack"
+            case isSpotify = "spotify"
+            case isTwitch = "twitch"
+            case isTwitter = "twitter"
+        }
+    }
+
+    public init(isAutoconfirm: Bool, isDisableSignup: Bool, external: External) {
+        self.isAutoconfirm = isAutoconfirm
+        self.isDisableSignup = isDisableSignup
+        self.external = external
     }
 
     private enum CodingKeys: String, CodingKey {
-      case isApple = "apple"
-      case isAzure = "azure"
-      case isBitbucket = "bitbucket"
-      case isDiscord = "discord"
-      case isFacebook = "facebook"
-      case isGithub = "github"
-      case isGitlab = "gitlab"
-      case isGoogle = "google"
-      case isLinkedin = "linkedin"
-      case isNotion = "notion"
-      case isSlack = "slack"
-      case isSpotify = "spotify"
-      case isTwitch = "twitch"
-      case isTwitter = "twitter"
+        case isAutoconfirm = "autoconfirm"
+        case isDisableSignup = "disable_signup"
+        case external
     }
-  }
-
-  public init(isAutoconfirm: Bool, isDisableSignup: Bool, external: External) {
-    self.isAutoconfirm = isAutoconfirm
-    self.isDisableSignup = isDisableSignup
-    self.external = external
-  }
-
-  private enum CodingKeys: String, CodingKey {
-    case isAutoconfirm = "autoconfirm"
-    case isDisableSignup = "disable_signup"
-    case external
-  }
 }
 
 public struct VerificationRequest: Codable {
-  public var type: VerificationType
-  public var token: String
+    public var type: VerificationType
+    public var token: String
 
-  public init(type: VerificationType, token: String) {
-    self.type = type
-    self.token = token
-  }
+    public init(type: VerificationType, token: String) {
+        self.type = type
+        self.token = token
+    }
 }
 
 public struct VerificationResponse: Codable {
-  public var accessToken: String
-  public var tokenType: String
-  public var expiresIn: Double
-  public var refreshToken: String
-  public var type: VerificationType
+    public var accessToken: String
+    public var tokenType: String
+    public var expiresIn: Double
+    public var refreshToken: String
+    public var type: VerificationType
 
-  public init(
-    accessToken: String, tokenType: String, expiresIn: Double, refreshToken: String,
-    type: VerificationType
-  ) {
-    self.accessToken = accessToken
-    self.tokenType = tokenType
-    self.expiresIn = expiresIn
-    self.refreshToken = refreshToken
-    self.type = type
-  }
+    public init(accessToken: String, tokenType: String, expiresIn: Double, refreshToken: String, type: VerificationType) {
+        self.accessToken = accessToken
+        self.tokenType = tokenType
+        self.expiresIn = expiresIn
+        self.refreshToken = refreshToken
+        self.type = type
+    }
 
-  private enum CodingKeys: String, CodingKey {
-    case accessToken = "access_token"
-    case tokenType = "token_type"
-    case expiresIn = "expires_in"
-    case refreshToken = "refresh_token"
-    case type
-  }
+    private enum CodingKeys: String, CodingKey {
+        case accessToken = "access_token"
+        case tokenType = "token_type"
+        case expiresIn = "expires_in"
+        case refreshToken = "refresh_token"
+        case type
+    }
 }
 
 public struct TokenRequest: Codable {
-  public var email: String?
-  public var password: String?
-  public var phone: String?
-  public var refreshToken: String?
+    public var email: String?
+    public var password: String?
+    public var phone: String?
+    public var refreshToken: String?
 
-  public init(
-    email: String? = nil, password: String? = nil, phone: String? = nil, refreshToken: String? = nil
-  ) {
-    self.email = email
-    self.password = password
-    self.phone = phone
-    self.refreshToken = refreshToken
-  }
+    public init(email: String? = nil, password: String? = nil, phone: String? = nil, refreshToken: String? = nil) {
+        self.email = email
+        self.password = password
+        self.phone = phone
+        self.refreshToken = refreshToken
+    }
 
-  private enum CodingKeys: String, CodingKey {
-    case email
-    case password
-    case phone
-    case refreshToken = "refresh_token"
-  }
+    private enum CodingKeys: String, CodingKey {
+        case email
+        case password
+        case phone
+        case refreshToken = "refresh_token"
+    }
 }
 
 public struct Session: Codable {
-  public var accessToken: String
-  public var tokenType: String
-  public var expiresIn: Double
-  public var refreshToken: String
-  public var user: User
+    public var accessToken: String
+    public var tokenType: String
+    public var expiresIn: Double
+    public var refreshToken: String
+    public var user: User
 
-  public init(
-    accessToken: String, tokenType: String, expiresIn: Double, refreshToken: String, user: User
-  ) {
-    self.accessToken = accessToken
-    self.tokenType = tokenType
-    self.expiresIn = expiresIn
-    self.refreshToken = refreshToken
-    self.user = user
-  }
+    public init(accessToken: String, tokenType: String, expiresIn: Double, refreshToken: String, user: User) {
+        self.accessToken = accessToken
+        self.tokenType = tokenType
+        self.expiresIn = expiresIn
+        self.refreshToken = refreshToken
+        self.user = user
+    }
 
-  private enum CodingKeys: String, CodingKey {
-    case accessToken = "access_token"
-    case tokenType = "token_type"
-    case expiresIn = "expires_in"
-    case refreshToken = "refresh_token"
-    case user
-  }
+    private enum CodingKeys: String, CodingKey {
+        case accessToken = "access_token"
+        case tokenType = "token_type"
+        case expiresIn = "expires_in"
+        case refreshToken = "refresh_token"
+        case user
+    }
 }
 
 public struct User: Codable {
-  public var email: String
+    public var email: String
 
-  public init(email: String) {
-    self.email = email
-  }
+    public init(email: String) {
+        self.email = email
+    }
 }
 
 public enum AnyJSON: Equatable, Codable {
-  case string(String)
-  case number(Double)
-  case object([String: AnyJSON])
-  case array([AnyJSON])
-  case bool(Bool)
+    case string(String)
+    case number(Double)
+    case object([String: AnyJSON])
+    case array([AnyJSON])
+    case bool(Bool)
 
-  var value: Any {
-    switch self {
-    case .string(let string): return string
-    case .number(let double): return double
-    case .object(let dictionary): return dictionary
-    case .array(let array): return array
-    case .bool(let bool): return bool
+    var value: Any {
+        switch self {
+        case .string(let string): return string
+        case .number(let double): return double
+        case .object(let dictionary): return dictionary
+        case .array(let array): return array
+        case .bool(let bool): return bool
+        }
     }
-  }
 
-  public func encode(to encoder: Encoder) throws {
-    var container = encoder.singleValueContainer()
-    switch self {
-    case let .array(array): try container.encode(array)
-    case let .object(object): try container.encode(object)
-    case let .string(string): try container.encode(string)
-    case let .number(number): try container.encode(number)
-    case let .bool(bool): try container.encode(bool)
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        switch self {
+        case let .array(array): try container.encode(array)
+        case let .object(object): try container.encode(object)
+        case let .string(string): try container.encode(string)
+        case let .number(number): try container.encode(number)
+        case let .bool(bool): try container.encode(bool)
+        }
     }
-  }
 
-  public init(from decoder: Decoder) throws {
-    let container = try decoder.singleValueContainer()
-    if let object = try? container.decode([String: AnyJSON].self) {
-      self = .object(object)
-    } else if let array = try? container.decode([AnyJSON].self) {
-      self = .array(array)
-    } else if let string = try? container.decode(String.self) {
-      self = .string(string)
-    } else if let bool = try? container.decode(Bool.self) {
-      self = .bool(bool)
-    } else if let number = try? container.decode(Double.self) {
-      self = .number(number)
-    } else {
-      throw DecodingError.dataCorrupted(
-        .init(codingPath: decoder.codingPath, debugDescription: "Invalid JSON value.")
-      )
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        if let object = try? container.decode([String: AnyJSON].self) {
+            self = .object(object)
+        } else if let array = try? container.decode([AnyJSON].self) {
+            self = .array(array)
+        } else if let string = try? container.decode(String.self) {
+            self = .string(string)
+        } else if let bool = try? container.decode(Bool.self) {
+            self = .bool(bool)
+        } else if let number = try? container.decode(Double.self) {
+            self = .number(number)
+        } else {
+            throw DecodingError.dataCorrupted(
+                .init(codingPath: decoder.codingPath, debugDescription: "Invalid JSON value.")
+            )
+        }
     }
-  }
 }
 
 struct StringCodingKey: CodingKey, ExpressibleByStringLiteral {
-  private let string: String
-  private var int: Int?
+    private let string: String
+    private var int: Int?
 
-  var stringValue: String { return string }
+    var stringValue: String { return string }
 
-  init(string: String) {
-    self.string = string
-  }
+    init(string: String) {
+        self.string = string
+    }
 
-  init?(stringValue: String) {
-    self.string = stringValue
-  }
+    init?(stringValue: String) {
+        self.string = stringValue
+    }
 
-  var intValue: Int? { return int }
+    var intValue: Int? { return int }
 
-  init?(intValue: Int) {
-    self.string = String(describing: intValue)
-    self.int = intValue
-  }
+    init?(intValue: Int) {
+        self.string = String(describing: intValue)
+        self.int = intValue
+    }
 
-  init(stringLiteral value: String) {
-    self.string = value
-  }
+    init(stringLiteral value: String) {
+        self.string = value
+    }
 }
