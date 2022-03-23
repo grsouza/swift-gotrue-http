@@ -2,7 +2,7 @@
 
 A Swift Library for [supabase/gotrue](https://github.com/supabase/gotrue) HTTP API generated using [kean/CreateAPI](https://github.com/kean/CreateAPI).
 
-## TODO
+## Roadmap
 - [x] Sign up with email and password
 - [ ] Sign in with email and password
 - [x] Sign up with phone

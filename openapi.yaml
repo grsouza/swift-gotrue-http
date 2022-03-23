@@ -102,7 +102,7 @@ components:
       in: query
       schema:
         type: string
-        format: url
+        format: uri
   schemas:
     VerificationType:
       type: string

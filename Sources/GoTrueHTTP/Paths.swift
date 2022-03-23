@@ -46,11 +46,11 @@ extension Paths {
         /// Path: `/token`
         public let path: String
 
-        public func post(grantType: GrantType, redirectURL: String? = nil, _ body: GoTrueHTTP.TokenRequest) -> Request<GoTrueHTTP.Session> {
+        public func post(grantType: GrantType, redirectURL: URL? = nil, _ body: GoTrueHTTP.TokenRequest) -> Request<GoTrueHTTP.Session> {
             .post(path, query: makePostQuery(grantType, redirectURL), body: body)
         }
 
-        private func makePostQuery(_ grantType: GrantType, _ redirectURL: String?) -> [(String, String?)] {
+        private func makePostQuery(_ grantType: GrantType, _ redirectURL: URL?) -> [(String, String?)] {
             let encoder = URLQueryEncoder()
             encoder.encode(grantType, forKey: "grant_type")
             encoder.encode(redirectURL, forKey: "redirect_url")
@@ -73,7 +73,7 @@ extension Paths {
         /// Path: `/signup`
         public let path: String
 
-        public func post(redirectURL: String? = nil, _ body: PostRequest? = nil) -> Request<PostResponse> {
+        public func post(redirectURL: URL? = nil, _ body: PostRequest? = nil) -> Request<PostResponse> {
             .post(path, query: makePostQuery(redirectURL), body: body)
         }
 
@@ -93,7 +93,7 @@ extension Paths {
             }
         }
 
-        private func makePostQuery(_ redirectURL: String?) -> [(String, String?)] {
+        private func makePostQuery(_ redirectURL: URL?) -> [(String, String?)] {
             let encoder = URLQueryEncoder()
             encoder.encode(redirectURL, forKey: "redirect_url")
             return encoder.items
