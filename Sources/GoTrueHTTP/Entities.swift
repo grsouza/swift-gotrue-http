@@ -5,7 +5,7 @@
 
 import Foundation
 
-public struct TokenRequest: Codable {
+public struct UserCredentials: Codable {
     public var email: String?
     public var password: String?
     public var phone: String?
@@ -31,21 +31,9 @@ public struct SignUpRequest: Codable {
     public var password: String?
     public var phone: String?
     public var data: [String: AnyJSON]?
-    public var gotrueMetaSecurity: GotrueMetaSecurity?
+    public var gotrueMetaSecurity: GoTrueMetaSecurity?
 
-    public struct GotrueMetaSecurity: Codable {
-        public var hcaptchaToken: String?
-
-        public init(hcaptchaToken: String? = nil) {
-            self.hcaptchaToken = hcaptchaToken
-        }
-
-        private enum CodingKeys: String, CodingKey {
-            case hcaptchaToken = "hcaptcha_token"
-        }
-    }
-
-    public init(email: String? = nil, password: String? = nil, phone: String? = nil, data: [String: AnyJSON]? = nil, gotrueMetaSecurity: GotrueMetaSecurity? = nil) {
+    public init(email: String? = nil, password: String? = nil, phone: String? = nil, data: [String: AnyJSON]? = nil, gotrueMetaSecurity: GoTrueMetaSecurity? = nil) {
         self.email = email
         self.password = password
         self.phone = phone
@@ -153,12 +141,12 @@ public struct UserIdentity: Codable {
     public var id: String
     public var userID: String
     public var identityData: [String: AnyJSON]
-    public var provider: String
+    public var provider: Provider
     public var createdAt: Date
     public var lastSignInAt: Date
     public var updatedAt: Date
 
-    public init(id: String, userID: String, identityData: [String: AnyJSON], provider: String, createdAt: Date, lastSignInAt: Date, updatedAt: Date) {
+    public init(id: String, userID: String, identityData: [String: AnyJSON], provider: Provider, createdAt: Date, lastSignInAt: Date, updatedAt: Date) {
         self.id = id
         self.userID = userID
         self.identityData = identityData
@@ -176,6 +164,90 @@ public struct UserIdentity: Codable {
         case createdAt = "created_at"
         case lastSignInAt = "last_sign_in_at"
         case updatedAt = "updated_at"
+    }
+}
+
+public enum Provider: String, Codable, CaseIterable {
+    case apple
+    case azure
+    case bitbucket
+    case discord
+    case facebook
+    case github
+    case gitlab
+    case google
+    case keycloak
+    case linkedin
+    case notion
+    case slack
+    case spotify
+    case twitch
+    case twitter
+    case workos
+}
+
+public struct OpenIDConnectCredentials: Codable {
+    public var idToken: String
+    public var nonce: String
+    public var clientID: String?
+    public var issuer: String?
+    public var provider: Provider?
+
+    public init(idToken: String, nonce: String, clientID: String? = nil, issuer: String? = nil, provider: Provider? = nil) {
+        self.idToken = idToken
+        self.nonce = nonce
+        self.clientID = clientID
+        self.issuer = issuer
+        self.provider = provider
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case idToken = "id_token"
+        case nonce
+        case clientID = "client_id"
+        case issuer
+        case provider
+    }
+}
+
+public struct GoTrueMetaSecurity: Codable {
+    public var hcaptchaToken: String
+
+    public init(hcaptchaToken: String) {
+        self.hcaptchaToken = hcaptchaToken
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case hcaptchaToken = "hcaptcha_token"
+    }
+}
+
+public struct OTPParams: Codable {
+    public var email: String?
+    public var phone: String?
+    public var isCreateUser: Bool
+    public var gotrueMetaSecurity: GoTrueMetaSecurity?
+
+    public init(email: String? = nil, phone: String? = nil, isCreateUser: Bool? = nil, gotrueMetaSecurity: GoTrueMetaSecurity? = nil) {
+        self.email = email
+        self.phone = phone
+        self.isCreateUser = isCreateUser ?? true
+        self.gotrueMetaSecurity = gotrueMetaSecurity
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case email
+        case phone
+        case isCreateUser = "create_user"
+        case gotrueMetaSecurity = "gotrue_meta_security"
+    }
+
+    public init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        self.email = try values.decodeIfPresent(String.self, forKey: .email)
+        self.phone = try values.decodeIfPresent(String.self, forKey: .phone)
+        self.isCreateUser = try values.decodeIfPresent(Bool.self, forKey: .isCreateUser) ?? true
+        self.gotrueMetaSecurity = try values.decodeIfPresent(GoTrueMetaSecurity.self, forKey: .gotrueMetaSecurity)
     }
 }
 

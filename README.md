@@ -4,11 +4,11 @@ A Swift Library for [supabase/gotrue](https://github.com/supabase/gotrue) HTTP A
 
 ## Roadmap
 - [x] Sign up with email and password
-- [ ] Sign in with email and password
+- [x] Sign in with email and password
 - [x] Sign up with phone
-- [ ] Sign in with phone
-- [ ] Sign in with OpenID Connect
-- [ ] Sign in with email magic link
+- [x] Sign in with phone
+- [x] Sign in with OpenID Connect
+- [x] Sign in with email magic link
 - [ ] Sign out
 - [ ] Verify OTP
 - [ ] Invite user by email

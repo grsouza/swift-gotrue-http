@@ -16,7 +16,7 @@ extension Paths {
         /// Path: `/token`
         public let path: String
 
-        public func post(grantType: GrantType, redirectURL: URL? = nil, _ body: GoTrueHTTP.TokenRequest) -> Request<GoTrueHTTP.Session> {
+        public func post(grantType: GrantType, redirectURL: URL? = nil, _ body: PostRequest) -> Request<GoTrueHTTP.Session> {
             .post(path, query: makePostQuery(grantType, redirectURL), body: body)
         }
 
@@ -30,6 +30,20 @@ extension Paths {
         public enum GrantType: String, Codable, CaseIterable {
             case password
             case refreshToken = "refresh_token"
+            case idToken = "id_token"
+        }
+
+        public enum PostRequest: Encodable {
+            case userCredentials(GoTrueHTTP.UserCredentials)
+            case openIDConnectCredentials(GoTrueHTTP.OpenIDConnectCredentials)
+
+            public func encode(to encoder: Encoder) throws {
+                var container = encoder.singleValueContainer()
+                switch self {
+                case .userCredentials(let value): try container.encode(value)
+                case .openIDConnectCredentials(let value): try container.encode(value)
+                }
+            }
         }
     }
 }
@@ -61,6 +75,27 @@ extension Paths {
                     throw DecodingError.dataCorruptedError(in: container, debugDescription: "Failed to intialize `oneOf`")
                 }
             }
+        }
+
+        private func makePostQuery(_ redirectURL: URL?) -> [(String, String?)] {
+            let encoder = URLQueryEncoder()
+            encoder.encode(redirectURL, forKey: "redirect_url")
+            return encoder.items
+        }
+    }
+}
+
+extension Paths {
+    public static var otp: Otp {
+        Otp(path: "/otp")
+    }
+
+    public struct Otp {
+        /// Path: `/otp`
+        public let path: String
+
+        public func post(redirectURL: URL? = nil, _ body: GoTrueHTTP.OTPParams? = nil) -> Request<Void> {
+            .post(path, query: makePostQuery(redirectURL), body: body)
         }
 
         private func makePostQuery(_ redirectURL: URL?) -> [(String, String?)] {
