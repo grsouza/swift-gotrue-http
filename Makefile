@@ -8,7 +8,8 @@ create-api:
 	create-api \
 		generate openapi.yaml \
 		--output Sources/GoTrueHTTP \
-		--module GoTrueHTTP
+		--module GoTrueHTTP \
+		--config .createapi.yml
 	$(MAKE) format
 
 .PHONY: format create-api
